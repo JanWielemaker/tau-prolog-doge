@@ -10,7 +10,6 @@
 % move/3
 % Move the doge
 move(Doge, Axis, Incr) :-
-	get_by_id(board, Board),
 	style(Doge, Axis, px(X0)),
 	X1 is X0+Incr,
 	X1 >= -10,
@@ -73,11 +72,16 @@ init :-
 		event_property(Event, key, Key),
 		remark_control(Key),
 		action(Doge, Key)
-		
 	)).
 		</script>
 	</head>
 	<body>
+<h1>Tau-Prolog Doge demo</h1>
+<p>
+This is a port of the <a href="https://github.com/tau-prolog/tau-prolog/tree/master/examples/doge">Tau-Prolog Doge demo</a> to the SWI-Prolog WASM version.  The
+only change to the port is downloading and initializing Prolog.  The Prolog script
+itself runs unmodified.
+</p>
 		<div id="board">
 			<div id="doge"></div>
 			<div id="controls">
@@ -88,22 +92,23 @@ init :-
 				<div class="control" id="control-p">p (poop)</div>
 			</div>
 		</div>
-		<script src="/wasm/swipl-bundle.js"></script>
-		<script type="text/javascript">
-let Prolog;
-let Module;
-var options = {
-    arguments: ["-q"],
-    locateFile: (file) => '/wasm/' + file,
-    on_output: print
+<p><i style="font-size:80%">
+Tau-Prolog and its examples are covered by the BSD-3 license.  This demo
+is written by José Antonio Riaza Valverde and ported to SWI-Prolog by
+Jan Wielemaker.
+</i></p>
+
+<!-- Get SWI-Prolog loaded and running -->
+
+<script src="/wasm/swipl-bundle.js"></script>
+<script type="text/javascript">
+aaaddddddconst options = {
+    arguments: ["-q"]
 };
 
 SWIPL(options).then((module) =>
-{ Module = module;
-  Prolog = Module.prolog;
-
-  Prolog.load_scripts().then(() =>
-    Prolog.call("init"));
+{ module.prolog.load_scripts().then(() =>
+    module.prolog.call("init"));
 });
 		</script>
 
