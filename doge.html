@@ -62,6 +62,24 @@ action(Doge, p) :-
 	add_class(Poop, poop),
 	insert_before(Poop, Doge).
 
+%!	bind_buttons(+Doge)
+%
+%	Bind the control buttons for clicking, so we can use the game
+%	without keyboard.  SWI-Prolog version extension.
+
+bind_buttons(Doge) :-
+	forall(clause(action(_,Key),_),
+	       bind_button(Doge, Key)).
+
+bind_button(Doge, Key) :-
+	atom_concat('control-', Key, Id),
+	get_by_id(Id, Control),
+	bind(Control, mousedown, _,
+	     ( remark_control(Key),
+	       action(Doge, Key))),
+	bind(Control, mouseup, _,
+	     remove_class(Control, focus)).
+
 % init/0
 % Initilize the game
 init :-
@@ -72,7 +90,8 @@ init :-
 		event_property(Event, key, Key),
 		remark_control(Key),
 		action(Doge, Key)
-	)).
+	)),
+	bind_buttons(Doge).
 		</script>
 	</head>
 	<body>
